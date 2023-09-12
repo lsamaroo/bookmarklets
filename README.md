@@ -1,11 +1,14 @@
 # bookmarklets
 A list of bookmarklets
 
-<a id="bookmarklet-a" class="bookmarklet" href="javascript:(function()%7Bjavascript%3A(function()%20%7B%0A%20%20%20%20function%20findAndClickButtonByText(text)%20%7B%0A%20%20%20%20%20%20%20%20const%20buttons%20%3D%20document.querySelectorAll('button')%3B%0A%20%20%20%20%20%20%20%20for%20(const%20button%20of%20buttons)%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20if%20(button.textContent.includes(text))%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20button.click()%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20return%20true%3B%0A%20%20%20%20%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%20%20return%20false%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20const%20keywords%20%3D%20%5B'Unfollow'%2C%20'Joined'%5D%3B%0A%20%20%20%20for%20(const%20keyword%20of%20keywords)%20%7B%0A%20%20%20%20%20%20%20%20if%20(findAndClickButtonByText(keyword))%20%7B%0A%20%20%20%20%20%20%20%20%20%20%20%20break%3B%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%7D)()%3B%7D)()%3B">Reddit Unfollow/Leave </a>
+Leave ALL reddit group/users
 
-javascript:(function() {
+Add the code below to one of these online bookmarklet maker e.g. https://mrcoles.com/bookmarklet/  and drag and drop your new bookmarklet to the bookmark bar.  
+Go to reddit, find the page which lists all your users and communites on the left and click on the bookmarklet. 
+
+javascript:(async function() {
     function findAndClickButtonByText(text) {
-        const buttons = document.querySelectorAll('button');
+        const buttons = document.querySelectorAll('button, span');
         for (const button of buttons) {
             if (button.textContent.includes(text)) {
                 button.click();
@@ -15,10 +18,14 @@ javascript:(function() {
         return false;
     }
 
-    const keywords = ['Unfollow', 'Joined'];
-    for (const keyword of keywords) {
-        if (findAndClickButtonByText(keyword)) {
-            break;
+    async function clickMenuItemsAndWait() {
+        const menuItems = document.querySelectorAll('a[role="menuitem"]');
+        for (const menuItem of menuItems) {
+            menuItem.click();
+            await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for 3 seconds
+            findAndClickButtonByText('Unfollow') || findAndClickButtonByText('Leave');
         }
     }
+
+    await clickMenuItemsAndWait();
 })();
